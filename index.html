@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A clean personal landing page." />
+  <title>Your Domain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#top">YOURDOMAIN</a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#links">Links</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">WELCOME</p>
+          <h1>A simple place on the web.</h1>
+          <p class="lead">
+            This is a clean starting page for your domain — ready to grow into
+            whatever you want it to become.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#about">Explore</a>
+            <a class="button secondary" href="#contact">Contact</a>
+          </div>
+        </div>
+
+        <div class="visual-card" aria-hidden="true">
+          <div class="orb orb-one"></div>
+          <div class="orb orb-two"></div>
+          <div class="glass-card">
+            <span class="mini-label">STATUS</span>
+            <strong>Online</strong>
+            <span class="mini-copy">A quiet corner of the internet.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="section-label">ABOUT</div>
+        <div class="section-content two-column">
+          <h2>Minimal by design.</h2>
+          <p>
+            This page is intentionally simple. It gives your domain a finished,
+            professional appearance without tying it to a company, portfolio,
+            product, or specific project.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="links">
+        <div class="section-label">LINKS</div>
+        <div class="link-grid">
+          <a class="link-card" href="#">
+            <span>01</span>
+            <div>
+              <h3>Profile</h3>
+              <p>Add a personal or social link here.</p>
+            </div>
+            <b>↗</b>
+          </a>
+
+          <a class="link-card" href="#">
+            <span>02</span>
+            <div>
+              <h3>Projects</h3>
+              <p>Use this later for projects, notes or other work.</p>
+            </div>
+            <b>↗</b>
+          </a>
+
+          <a class="link-card" href="#">
+            <span>03</span>
+            <div>
+              <h3>Something Else</h3>
+              <p>This section can become anything you need.</p>
+            </div>
+            <b>↗</b>
+          </a>
+        </div>
+      </section>
+
+      <section class="contact-card" id="contact">
+        <div>
+          <p class="eyebrow">CONTACT</p>
+          <h2>Want to get in touch?</h2>
+          <p>Replace this with your preferred contact method.</p>
+        </div>
+
+        <a class="button primary" href="mailto:your@email.com">Email</a>
+      </section>
+    </main>
+
+    <footer>
+      <span>© <span id="year"></span> Your Domain</span>
+      <span>Simple. Clean. Flexible.</span>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
