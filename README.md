@@ -15,6 +15,18 @@ Everything (styles, markup, the animated agentic workflow) lives in `index.html`
 | `.nojekyll` | Stops GitHub from running Jekyll over the files |
 | `CNAME.example` | Rename to `CNAME` only if using the custom domain — see below |
 
+## Before you publish — check the domain
+
+Five places hardcode `https://ahlehjelm.se/`. If you go live on a
+`github.io` address first, update them or link previews will point at a domain
+that isn't serving yet:
+
+- `index.html` — the `canonical` link, `og:url` and `og:image`
+- `robots.txt` — the `Sitemap:` line
+- `sitemap.xml` — the `<loc>` value
+
+Once the custom domain is attached, they're all correct as written.
+
 ## Publishing
 
 1. Create a repository on GitHub. If you want the address to be
@@ -67,11 +79,13 @@ Open `index.html` in any editor and reload the file in a browser to see
 changes. Nothing to install or compile.
 
 The workflow animation is driven by the `steps` array near the bottom of the
-file. Each entry sets which nodes light up, which wire carries the signal, and
-what the log line says — edit the `log` strings to describe a process you have
-actually built, and rename the `Trigger` and `Output` labels in the SVG to
-match. Timing is controlled by `STEP` (milliseconds per step) and `PAUSE`
-(the gap before the run restarts).
+file. Each entry sets which nodes light up (`act`), which nodes light up the
+moment the signal reaches them (`arrive`), which wire carries that signal
+(`edge`, with `dur` in seconds), and what the log line says. To describe a
+different process, edit the `log` strings and the `<text class="n-label">`
+node names in the SVG. Timing is controlled by `STEP` (milliseconds per step)
+and `PAUSE` (the gap before the run restarts); keep each `dur` at or just
+below `STEP` so signals arrive before the next step begins.
 
 The animation respects `prefers-reduced-motion` and pauses when scrolled out
 of view.
