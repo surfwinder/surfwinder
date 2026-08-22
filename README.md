@@ -1,7 +1,42 @@
 # ahlehjelm.se
 
-Personal site — a single static page, no build step, no dependencies.
-Everything (styles, markup, the animated agentic workflow) lives in `index.html`.
+My personal site. One page, one file, no build step.
+
+Everything the site needs — layout, styles, the animated agentic workflow, and
+the script that drives it — lives in a single 25 KB `index.html`. No framework,
+no bundler, no `node_modules`, no dependencies to update. Opening the file in a
+browser shows exactly what the live site shows.
+
+**Live:** https://ahlehjelm.se
+
+## Decisions worth explaining
+
+**No build step.** A personal page changes a few times a year. A toolchain
+would mean the site stops being editable the moment its dependencies go stale.
+Plain HTML and CSS still work in five years without maintenance.
+
+**No third-party requests.** No analytics, no tag manager, no CDN, no
+webfonts. The page loads from one domain and sends nothing to anyone else,
+which means no cookie banner and no GDPR exposure. Typography uses the system
+UI font — San Francisco on Apple devices, Segoe UI on Windows — so nothing is
+fetched to render text.
+
+**SVG rather than a video or a GIF** for the workflow animation. It stays sharp
+at any size, weighs nothing, and the individual nodes stay addressable from
+JavaScript, so the execution states are driven by adding and removing classes
+rather than by playing a clip.
+
+**Motion is opt-out and considerate.** The animation honours
+`prefers-reduced-motion` — reduced-motion visitors get the finished workflow as
+a static diagram — and an `IntersectionObserver` pauses it whenever it is
+scrolled out of view, so it costs nothing when nobody is looking at it.
+
+**Accessibility checked, not assumed.** Text contrast passes WCAG AA
+throughout (body 16.8:1, muted 8.0:1 against the background). The heading
+outline runs `h1 → h2 → h3` with no skipped levels. The workflow is exposed to
+screen readers as a single labelled image rather than as a stream of changing
+status text, and German terms carry `lang="de"` so they are pronounced
+correctly.
 
 ## Files
 
@@ -9,83 +44,27 @@ Everything (styles, markup, the animated agentic workflow) lives in `index.html`
 | --- | --- |
 | `index.html` | The whole site |
 | `404.html` | Styled not-found page, served automatically by GitHub Pages |
-| `favicon.svg` | Browser tab icon |
-| `og-image.png` | Preview card for LinkedIn, Slack, X, iMessage (1200×630) |
+| `favicon.svg` | Tab icon |
+| `og-image.png` | Link preview card, 1200×630 |
 | `robots.txt`, `sitemap.xml` | Search engine basics |
-| `.nojekyll` | Stops GitHub from running Jekyll over the files |
-| `CNAME.example` | Rename to `CNAME` only if using the custom domain — see below |
-
-## Before you publish — check the domain
-
-Five places hardcode `https://ahlehjelm.se/`. If you go live on a
-`github.io` address first, update them or link previews will point at a domain
-that isn't serving yet:
-
-- `index.html` — the `canonical` link, `og:url` and `og:image`
-- `robots.txt` — the `Sitemap:` line
-- `sitemap.xml` — the `<loc>` value
-
-Once the custom domain is attached, they're all correct as written.
-
-## Publishing
-
-1. Create a repository on GitHub. If you want the address to be
-   `https://<username>.github.io`, name the repo exactly that. Any other
-   name gives you `https://<username>.github.io/<repo>/`.
-2. Upload the contents of this folder to the root of the repo — the files
-   themselves, not the folder around them. Drag-and-drop into the GitHub web
-   uploader works; make sure `.nojekyll` comes along (it is a hidden file, so
-   on macOS press `Cmd + Shift + .` in Finder to see it).
-3. In the repo, open **Settings → Pages**. Under *Build and deployment*, set
-   **Source** to `Deploy from a branch`, branch `main`, folder `/ (root)`.
-   Save.
-4. Wait a minute or two, then reload the Pages settings screen — the live
-   address appears at the top.
-
-Via git instead:
-
-```bash
-git init
-git add .
-git commit -m "Personal site"
-git branch -M main
-git remote add origin https://github.com/<username>/<repo>.git
-git push -u origin main
-```
-
-## Custom domain (ahlehjelm.se)
-
-Only do this once the site is live on the `github.io` address.
-
-1. Rename `CNAME.example` to `CNAME`. It must contain the bare domain and
-   nothing else.
-2. At your DNS provider, create four `A` records for the apex domain `@`
-   pointing to `185.199.108.153`, `185.199.109.153`, `185.199.110.153`,
-   `185.199.111.153`, plus a `CNAME` record for `www` pointing to
-   `<username>.github.io`.
-3. In **Settings → Pages → Custom domain**, enter `ahlehjelm.se` and save.
-   Once the check passes, tick **Enforce HTTPS**.
-
-DNS changes can take anywhere from a few minutes to a day to propagate.
-
-If you are *not* using a custom domain, delete `CNAME.example`, and change the
-`https://ahlehjelm.se/` URLs in `index.html` (canonical link, `og:url`,
-`og:image`), `robots.txt` and `sitemap.xml` to your real address — otherwise
-link previews will point at a domain that isn't yours yet.
+| `.nojekyll` | Stops GitHub running Jekyll over the files |
+| `CNAME.example` | Template for the custom domain |
 
 ## Editing
 
-Open `index.html` in any editor and reload the file in a browser to see
-changes. Nothing to install or compile.
+Open `index.html` in any editor, save, reload the browser. That is the whole
+workflow.
 
-The workflow animation is driven by the `steps` array near the bottom of the
-file. Each entry sets which nodes light up (`act`), which nodes light up the
-moment the signal reaches them (`arrive`), which wire carries that signal
-(`edge`, with `dur` in seconds), and what the log line says. To describe a
-different process, edit the `log` strings and the `<text class="n-label">`
-node names in the SVG. Timing is controlled by `STEP` (milliseconds per step)
-and `PAUSE` (the gap before the run restarts); keep each `dur` at or just
-below `STEP` so signals arrive before the next step begins.
+The animation is driven by the `steps` array near the bottom of the file. Each
+entry declares which nodes light up immediately (`act`), which light up the
+moment a signal reaches them (`arrive`), which wire carries that signal
+(`edge`, with `dur` in seconds), and what the execution log says. To describe a
+different process, edit the `log` strings and the `<text class="n-label">` node
+names in the SVG. `STEP` sets the milliseconds per step and `PAUSE` the gap
+before the run repeats; keep each `dur` at or just below `STEP` so a signal
+arrives before the next step starts.
 
-The animation respects `prefers-reduced-motion` and pauses when scrolled out
-of view.
+One SVG gotcha worth remembering: a CSS `transform` **replaces** an element's
+`transform` attribute rather than combining with it. The completion badges are
+positioned with the attribute, so any transform animation on them needs a
+nested `<g>` — the outer one for position, the inner one for the animation.
